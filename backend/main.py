@@ -46,10 +46,10 @@ with app.app_context():
 if __name__ == "__main__":
     # Prevents the Kafka thread from starting twice
     if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
-        print("[*] Launching Kafka Consumer thread...")
-        run_consumer_thread()
+        print("Launching Kafka Consumer thread...")
+        run_consumer_thread(app)
     else:
-        print("[*] Initializing application context...")
+        print("Initializing application context...")
 
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=True)
