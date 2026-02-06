@@ -13,7 +13,7 @@ class User(db.Model):
     firebase_uid = db.Column(db.String(128), unique=True, nullable=False)
     username = db.Column(db.String(80), nullable=True)
     email = db.Column(db.String(120), nullable=True)
-    role = db.Column(db.String(20), default="client")
+    role = db.Column(db.String(20), default="admin")
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     builds = db.relationship("Build", backref="author", lazy=True)
 

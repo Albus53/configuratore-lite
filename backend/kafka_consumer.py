@@ -5,7 +5,7 @@ from confluent_kafka import Consumer, KafkaError
 from models import db, Build
 
 # --- CONFIGURATION ---
-KAFKA_BROKER = "127.0.0.1:9092"
+KAFKA_BROKER = "kafka:9094"
 TOPIC_NAME = "build_events"
 GROUP_ID = "backend-build-monitor"
 
