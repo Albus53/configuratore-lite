@@ -22,3 +22,18 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Key
+serviceAccountKey.json
+
+# cache Python
+__pycache__/
+*.pyc
+
+# DB
+instance/
+
+# Venv
+venv/
+.venv/
+env/
