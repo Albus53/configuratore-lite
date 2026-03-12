@@ -1,9 +1,56 @@
 from flask import Blueprint, request, jsonify
 from firebase_admin import auth
 from sqlalchemy import desc
-from models import db, User, Build
+from models import db, User, Build, Board
 
 api = Blueprint('api', __name__)
+
+
+def serialize_feature(feature):
+    return {
+        "id": feature.id,
+        "name": feature.name,
+        "description": feature.description,
+    }
+
+
+def serialize_board(board):
+    return {
+        "id": board.id,
+        "name": board.name,
+        "description": board.description,
+        "toolchain": board.toolchain,
+        "cross_compiler": board.cross_compiler,
+        "hardware_configuration": board.hardware_configuration,
+    }
+
+
+@api.route("/boards", methods=["GET"])
+def get_boards():
+    boards = Board.query.order_by(Board.name.asc()).all()
+    results = []
+
+    for board in boards:
+        results.append(serialize_board(board))
+
+    return jsonify(results)
+
+
+@api.route("/boards/<board_id>/features", methods=["GET"])
+def get_board_features(board_id):
+    board = Board.query.filter_by(id=board_id).first()
+
+    if not board:
+        return jsonify({"error": "Board not found"}), 404
+
+    results = []
+    features = sorted(board.features, key=lambda feature: feature.name.lower())
+
+    for feature in features:
+        results.append(serialize_feature(feature))
+
+    return jsonify(results)
+
 
 @api.route("/profile", methods=["GET"])
 def get_profile():
