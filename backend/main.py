@@ -12,6 +12,7 @@ from firebase_admin import credentials
 from kafka_consumer import run_consumer_thread
 
 from models import db
+from seeds import seed_reference_data
 from api_routes import api
 from web_routes import web
 
@@ -42,6 +43,7 @@ app.register_blueprint(web)
 # --- Startup Logic ---
 with app.app_context():
     db.create_all()
+    seed_reference_data()
 
 if __name__ == "__main__":
     # Prevents the Kafka thread from starting twice
