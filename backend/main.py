@@ -9,6 +9,7 @@ from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 import firebase_admin
 from firebase_admin import credentials
+from sqlalchemy import inspect, text
 from kafka_consumer import run_consumer_thread
 
 from models import db
@@ -41,8 +42,29 @@ app.register_blueprint(api, url_prefix="/api")
 app.register_blueprint(web)
 
 # --- Startup Logic ---
+def ensure_feature_schema_alignment():
+    inspector = inspect(db.engine)
+
+    if "features" not in inspector.get_table_names():
+        return
+
+    feature_columns = {column["name"] for column in inspector.get_columns("features")}
+
+    if "category" in feature_columns:
+        return
+
+    with db.engine.begin() as connection:
+        connection.execute(
+            text(
+                "ALTER TABLE features "
+                "ADD COLUMN category VARCHAR(80) NOT NULL DEFAULT 'uncategorized'"
+            )
+        )
+
+
 with app.app_context():
     db.create_all()
+    ensure_feature_schema_alignment()
     seed_reference_data()
 
 if __name__ == "__main__":
