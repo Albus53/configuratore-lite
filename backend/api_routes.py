@@ -11,6 +11,7 @@ def serialize_feature(feature):
         "id": feature.id,
         "name": feature.name,
         "description": feature.description,
+        "category": feature.category,
     }
 
 
