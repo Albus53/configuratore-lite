@@ -6,31 +6,37 @@ RASPBERRY_PI_FEATURES = [
         "id": "gpio",
         "name": "GPIO",
         "description": "General-purpose input/output pins for hardware control.",
+        "category": "hardware_io",
     },
     {
         "id": "i2c",
         "name": "I2C",
         "description": "Serial bus for sensors and peripheral communication.",
+        "category": "hardware_communication",
     },
     {
         "id": "spi",
         "name": "SPI",
         "description": "Serial peripheral interface for high-speed devices.",
+        "category": "hardware_communication",
     },
     {
         "id": "uart",
         "name": "UART",
         "description": "Serial communication interface for external devices.",
+        "category": "hardware_communication",
     },
     {
         "id": "wifi",
         "name": "Wi-Fi",
         "description": "Integrated wireless network connectivity.",
+        "category": "hardware_communication",
     },
     {
         "id": "bluetooth",
         "name": "Bluetooth",
         "description": "Integrated Bluetooth and BLE connectivity.",
+        "category": "hardware_communication",
     },
 ]
 
@@ -57,11 +63,13 @@ def get_or_create_feature(feature_data):
             id=feature_data["id"],
             name=feature_data["name"],
             description=feature_data["description"],
+            category=feature_data["category"],
         )
         db.session.add(feature)
     else:
         feature.name = feature_data["name"]
         feature.description = feature_data["description"]
+        feature.category = feature_data["category"]
 
     return feature
 
