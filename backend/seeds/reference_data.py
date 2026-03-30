@@ -9,6 +9,12 @@ RASPBERRY_PI_FEATURES = [
         "category": "hardware_io",
     },
     {
+        "id": "pwm",
+        "name": "PWM",
+        "description": "Pulse-width modulation output for motors, LEDs, and signal control.",
+        "category": "hardware_io",
+    },
+    {
         "id": "i2c",
         "name": "I2C",
         "description": "Serial bus for sensors and peripheral communication.",
@@ -38,6 +44,48 @@ RASPBERRY_PI_FEATURES = [
         "description": "Integrated Bluetooth and BLE connectivity.",
         "category": "hardware_communication",
     },
+    {
+        "id": "ethernet",
+        "name": "Gigabit Ethernet",
+        "description": "Wired network connectivity through the on-board Ethernet port.",
+        "category": "hardware_communication",
+    },
+    {
+        "id": "usb_2_0",
+        "name": "USB 2.0",
+        "description": "USB 2.0 ports for keyboards, mice, serial adapters, and legacy peripherals.",
+        "category": "hardware_communication",
+    },
+    {
+        "id": "usb_3_0",
+        "name": "USB 3.0",
+        "description": "High-speed USB 3.0 ports for storage devices and other fast peripherals.",
+        "category": "hardware_communication",
+    },
+    {
+        "id": "hdmi_display",
+        "name": "HDMI Display",
+        "description": "Micro-HDMI display output for external monitors and TVs.",
+        "category": "hmi",
+    },
+    {
+        "id": "dsi_display",
+        "name": "DSI Display",
+        "description": "Display Serial Interface support for compatible Raspberry Pi display panels.",
+        "category": "hmi",
+    },
+    {
+        "id": "csi_camera",
+        "name": "CSI Camera",
+        "description": "Camera Serial Interface support for compatible Raspberry Pi camera modules.",
+        "category": "hmi",
+    },
+    {
+        "id": "audio_output",
+        "name": "Audio Output",
+        "description": "Analog and digital audio output for speakers, headphones, and multimedia setups.",
+        "category": "hmi",
+    },
 ]
 
 
@@ -50,7 +98,13 @@ RASPBERRY_PI_4_DATA = {
     "hardware_configuration": {
         "gpio_header": "40-pin",
         "wireless": ["wifi", "bluetooth"],
+        "networking": ["ethernet", "wifi", "bluetooth"],
         "serial_interfaces": ["i2c", "spi", "uart"],
+        "gpio_functions": ["gpio", "pwm"],
+        "usb_ports": ["usb_2_0", "usb_2_0", "usb_3_0", "usb_3_0"],
+        "display_outputs": ["hdmi_display", "dsi_display"],
+        "camera_interfaces": ["csi_camera"],
+        "audio_outputs": ["audio_output"],
     },
 }
 
