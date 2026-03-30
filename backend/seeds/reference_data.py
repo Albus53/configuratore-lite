@@ -1,7 +1,7 @@
 from models import db, Board, Feature
 
 
-RASPBERRY_PI_FEATURES = [
+FEATURES_DATA = [
     {
         "id": "gpio",
         "name": "GPIO",
@@ -86,6 +86,48 @@ RASPBERRY_PI_FEATURES = [
         "description": "Analog and digital audio output for speakers, headphones, and multimedia setups.",
         "category": "hmi",
     },
+    {
+        "id": "adc",
+        "name": "ADC",
+        "description": "Analog-to-digital converter inputs for reading analog sensors and variable signals.",
+        "category": "hardware_io",
+    },
+    {
+        "id": "can",
+        "name": "CAN",
+        "description": "Controller Area Network interface for robust industrial communication.",
+        "category": "hardware_communication",
+    },
+    {
+        "id": "usb_host",
+        "name": "USB Host",
+        "description": "USB host port support for external peripherals such as storage, hubs, and input devices.",
+        "category": "hardware_communication",
+    },
+    {
+        "id": "usb_client",
+        "name": "USB Client",
+        "description": "USB device/client port support for power, flashing, networking, and development workflows.",
+        "category": "hardware_communication",
+    },
+    {
+        "id": "micro_sd_storage",
+        "name": "microSD Storage",
+        "description": "microSD slot support for removable storage and alternate boot media.",
+        "category": "system_logic",
+    },
+    {
+        "id": "emmc_storage",
+        "name": "eMMC Storage",
+        "description": "On-board eMMC storage for booting and persistent system images.",
+        "category": "system_logic",
+    },
+    {
+        "id": "lcd_interface",
+        "name": "LCD Interface",
+        "description": "Parallel LCD interface support for compatible display expansion boards.",
+        "category": "hmi",
+    },
 ]
 
 
@@ -107,6 +149,60 @@ RASPBERRY_PI_4_DATA = {
         "audio_outputs": ["audio_output"],
     },
 }
+
+RASPBERRY_PI_4_FEATURE_IDS = [
+    "gpio",
+    "pwm",
+    "i2c",
+    "spi",
+    "uart",
+    "wifi",
+    "bluetooth",
+    "ethernet",
+    "usb_2_0",
+    "usb_3_0",
+    "hdmi_display",
+    "dsi_display",
+    "csi_camera",
+    "audio_output",
+]
+
+
+BEAGLEBONE_DATA = {
+    "id": "beaglebone",
+    "name": "BeagleBone Black",
+    "description": "Reference BeagleBone target modeled on documented BeagleBone Black hardware capabilities.",
+    "toolchain": "yocto",
+    "cross_compiler": "arm-poky-linux-gnueabi",
+    "hardware_configuration": {
+        "expansion_headers": ["P8", "P9"],
+        "networking": ["ethernet"],
+        "serial_interfaces": ["i2c", "spi", "uart", "can"],
+        "gpio_functions": ["gpio", "pwm", "adc"],
+        "usb_ports": ["usb_client", "usb_host"],
+        "storage": ["emmc_storage", "micro_sd_storage"],
+        "display_outputs": ["hdmi_display", "lcd_interface"],
+        "audio_outputs": ["audio_output"],
+    },
+}
+
+BEAGLEBONE_FEATURE_IDS = [
+    "gpio",
+    "pwm",
+    "adc",
+    "i2c",
+    "spi",
+    "uart",
+    "can",
+    "ethernet",
+    "usb_host",
+    "usb_client",
+    "micro_sd_storage",
+    "emmc_storage",
+    "hdmi_display",
+    "lcd_interface",
+    "audio_output",
+]
 
 
 def get_or_create_feature(feature_data):
@@ -152,16 +248,24 @@ def get_or_create_board(board_data):
 
 
 def seed_reference_data():
-    features = []
+    features_by_id = {}
 
-    for feature_data in RASPBERRY_PI_FEATURES:
+    for feature_data in FEATURES_DATA:
         feature = get_or_create_feature(feature_data)
-        features.append(feature)
+        features_by_id[feature.id] = feature
 
-    board = get_or_create_board(RASPBERRY_PI_4_DATA)
+    raspberry_pi_4 = get_or_create_board(RASPBERRY_PI_4_DATA)
 
-    for feature in features:
-        if feature not in board.features:
-            board.features.append(feature)
+    for feature_id in RASPBERRY_PI_4_FEATURE_IDS:
+        feature = features_by_id[feature_id]
+        if feature not in raspberry_pi_4.features:
+            raspberry_pi_4.features.append(feature)
+
+    beaglebone = get_or_create_board(BEAGLEBONE_DATA)
+
+    for feature_id in BEAGLEBONE_FEATURE_IDS:
+        feature = features_by_id[feature_id]
+        if feature not in beaglebone.features:
+            beaglebone.features.append(feature)
 
     db.session.commit()
