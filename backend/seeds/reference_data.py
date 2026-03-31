@@ -45,6 +45,12 @@ FEATURES_DATA = [
         "category": "hardware_communication",
     },
     {
+        "id": "ble",
+        "name": "Bluetooth LE",
+        "description": "Bluetooth Low Energy connectivity for low-power wireless devices.",
+        "category": "hardware_communication",
+    },
+    {
         "id": "ethernet",
         "name": "Gigabit Ethernet",
         "description": "Wired network connectivity through the on-board Ethernet port.",
@@ -128,6 +134,12 @@ FEATURES_DATA = [
         "description": "Parallel LCD interface support for compatible display expansion boards.",
         "category": "hmi",
     },
+    {
+        "id": "touch_panel",
+        "name": "Touch Panel",
+        "description": "Touch input support for interactive displays and graphical interfaces.",
+        "category": "hmi",
+    },
 ]
 
 
@@ -205,6 +217,39 @@ BEAGLEBONE_FEATURE_IDS = [
 ]
 
 
+STM32_DISCOVERY_DATA = {
+    "id": "stm32",
+    "name": "STM32MP157F-DK2 Discovery Kit",
+    "description": "Reference STM32 Discovery target modeled on documented STM32MP157F-DK2 hardware capabilities.",
+    "toolchain": "yocto",
+    "cross_compiler": "arm-poky-linux-gnueabi",
+    "hardware_configuration": {
+        "expansion_connectors": ["arduino_uno_v3", "raspberry_pi_shield"],
+        "networking": ["ethernet", "wifi", "ble"],
+        "usb_ports": ["usb_client", "usb_host", "usb_host", "usb_host", "usb_host"],
+        "storage": ["micro_sd_storage"],
+        "display_outputs": ["hdmi_display", "dsi_display"],
+        "input_interfaces": ["touch_panel"],
+        "audio_outputs": ["audio_output"],
+        "gpio_functions": ["gpio"],
+    },
+}
+
+STM32_DISCOVERY_FEATURE_IDS = [
+    "gpio",
+    "wifi",
+    "ble",
+    "ethernet",
+    "usb_host",
+    "usb_client",
+    "micro_sd_storage",
+    "hdmi_display",
+    "dsi_display",
+    "touch_panel",
+    "audio_output",
+]
+
+
 def get_or_create_feature(feature_data):
     feature = db.session.get(Feature, feature_data["id"])
 
@@ -267,5 +312,12 @@ def seed_reference_data():
         feature = features_by_id[feature_id]
         if feature not in beaglebone.features:
             beaglebone.features.append(feature)
+
+    stm32_discovery = get_or_create_board(STM32_DISCOVERY_DATA)
+
+    for feature_id in STM32_DISCOVERY_FEATURE_IDS:
+        feature = features_by_id[feature_id]
+        if feature not in stm32_discovery.features:
+            stm32_discovery.features.append(feature)
 
     db.session.commit()
